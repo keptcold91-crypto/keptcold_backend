@@ -136,7 +136,9 @@ app.get('/health', (_req, res) => {
 });
 
 // ── 404 Catch-all ───────────────────────────────────────────────────────────
-
+app.use("/", (req, res) => {
+  res.send("server.js is running");
+});
 app.use((_req, res) => {
   res.status(404).json({ error: 'Not found' });
 });
