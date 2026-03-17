@@ -89,6 +89,7 @@ app.post('/webhook', async (req, res) => {
 
   // Log incoming fields so you can check Railway logs and verify field names
   console.log('[webhook] Received fields:', Object.keys(req.body));
+  console.log('[webhook] totalPrice value:', req.body.totalPrice, '| type:', typeof req.body.totalPrice, '| parsed:', String(req.body.totalPrice || req.body.price || req.body.amountPaid || req.body.amount || '').trim());
   console.log('[webhook] Body:', JSON.stringify(req.body));
 
   const data = {
@@ -102,7 +103,7 @@ app.post('/webhook', async (req, res) => {
     accessHours:      String(req.body.accessHours).trim(),
     // Accept multiple possible field names from different forms
     calloutPriority:  String(req.body.calloutPriority  || req.body.service        || req.body.priority       || '').trim(),
-    price:            String(req.body.totalPrice        || req.body.price          || req.body.amountPaid     || req.body.amount || '').trim(),
+    totalPrice:       String(req.body.totalPrice        || req.body.price          || req.body.amountPaid     || req.body.amount || '').trim(),
     equipmentType:    String(req.body.equipmentType     || req.body.equipment      || req.body.equipment_type || '').trim(),
     faultDescription: String(req.body.faultDescription  || req.body.fault          || req.body.description    || '').trim(),
   };

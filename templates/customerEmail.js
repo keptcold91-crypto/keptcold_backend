@@ -16,7 +16,7 @@ function customerEmailTemplate(data) {
 
   const ref           = escapeHtml(data.bookingReference || '');
   const priority      = data.calloutPriority  ? escapeHtml(data.calloutPriority)  : '&mdash;';
-  const price         = data.totalWithVAT    ? escapeHtml(data.totalWithVAT)    : '&mdash;';
+  const price         = data.totalPrice       ? escapeHtml(data.totalPrice)       : '&mdash;';
   const equipmentType = data.equipmentType    ? escapeHtml(data.equipmentType)    : '&mdash;';
   const firstName     = escapeHtml((data.contactName || '').split(' ')[0]);
 
