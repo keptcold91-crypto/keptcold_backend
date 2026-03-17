@@ -16,7 +16,7 @@ function customerEmailTemplate(data) {
 
   const ref           = escapeHtml(data.bookingReference || '');
   const priority      = data.calloutPriority  ? escapeHtml(data.calloutPriority)  : '&mdash;';
-  const price         = data.price            ? escapeHtml(data.price)            : '&mdash;';
+  const price         = data.totalWithVAT    ? escapeHtml(data.totalWithVAT)    : '&mdash;';
   const equipmentType = data.equipmentType    ? escapeHtml(data.equipmentType)    : '&mdash;';
   const firstName     = escapeHtml((data.contactName || '').split(' ')[0]);
 
@@ -156,7 +156,7 @@ function customerEmailTemplate(data) {
                   ${equipmentType}
                 </td>
               </tr>
-              <tr>
+              ${priority && priority !== '&mdash;' ? `<tr>
                 <td style="padding:8px 0;font-size:12px;color:#888888;
                             border-bottom:1px solid #f0f0f0;vertical-align:top;">
                   Service
@@ -165,7 +165,7 @@ function customerEmailTemplate(data) {
                             border-bottom:1px solid #f0f0f0;vertical-align:top;">
                   ${priority}
                 </td>
-              </tr>
+              </tr>` : ''}
               <tr>
                 <td style="padding:8px 0 16px;font-size:12px;color:#888888;vertical-align:top;">
                   Amount Paid

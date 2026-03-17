@@ -102,7 +102,7 @@ app.post('/webhook', async (req, res) => {
     accessHours:      String(req.body.accessHours).trim(),
     // Accept multiple possible field names from different forms
     calloutPriority:  String(req.body.calloutPriority  || req.body.service        || req.body.priority       || '').trim(),
-    price:            String(req.body.price             || req.body.amountPaid     || req.body.amount         || '').trim(),
+    price:            String(req.body.totalPrice        || req.body.price          || req.body.amountPaid     || req.body.amount || '').trim(),
     equipmentType:    String(req.body.equipmentType     || req.body.equipment      || req.body.equipment_type || '').trim(),
     faultDescription: String(req.body.faultDescription  || req.body.fault          || req.body.description    || '').trim(),
   };
