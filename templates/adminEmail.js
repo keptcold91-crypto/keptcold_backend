@@ -14,11 +14,11 @@ function adminEmailTemplate(data) {
     day: 'numeric', month: 'long', year: 'numeric',
   });
 
-  const ref             = escapeHtml(data.bookingReference || '');
-  const priority        = escapeHtml(data.calloutPriority  || '');
-  const price           = escapeHtml(data.price            || '');
-  const equipmentType   = escapeHtml(data.equipmentType    || '');
-  const faultDesc       = escapeHtml(data.faultDescription || '');
+  const ref           = escapeHtml(data.bookingReference || '');
+  const priority      = data.calloutPriority  ? escapeHtml(data.calloutPriority)  : '&mdash;';
+  const price         = data.price            ? escapeHtml(data.price)            : '&mdash;';
+  const equipmentType = data.equipmentType    ? escapeHtml(data.equipmentType)    : '&mdash;';
+  const faultDesc     = data.faultDescription ? escapeHtml(data.faultDescription) : '&mdash;';
 
   return `<!DOCTYPE html>
 <html lang="en">

@@ -15,9 +15,9 @@ function customerEmailTemplate(data) {
   });
 
   const ref           = escapeHtml(data.bookingReference || '');
-  const priority      = escapeHtml(data.calloutPriority  || '');
-  const price         = escapeHtml(data.price            || '');
-  const equipmentType = escapeHtml(data.equipmentType    || '');
+  const priority      = data.calloutPriority  ? escapeHtml(data.calloutPriority)  : '&mdash;';
+  const price         = data.price            ? escapeHtml(data.price)            : '&mdash;';
+  const equipmentType = data.equipmentType    ? escapeHtml(data.equipmentType)    : '&mdash;';
   const firstName     = escapeHtml((data.contactName || '').split(' ')[0]);
 
   return `<!DOCTYPE html>

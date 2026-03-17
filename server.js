@@ -87,6 +87,10 @@ app.post('/webhook', async (req, res) => {
     return res.status(400).json({ success: false, error: message });
   }
 
+  // Log incoming fields so you can check Railway logs and verify field names
+  console.log('[webhook] Received fields:', Object.keys(req.body));
+  console.log('[webhook] Body:', JSON.stringify(req.body));
+
   const data = {
     bookingReference: generateBookingRef(),
     businessName:     String(req.body.businessName).trim(),
@@ -96,10 +100,11 @@ app.post('/webhook', async (req, res) => {
     email:            String(req.body.email).trim().toLowerCase(),
     contactNumber:    String(req.body.contactNumber).trim(),
     accessHours:      String(req.body.accessHours).trim(),
-    calloutPriority:  String(req.body.calloutPriority  || '').trim(),
-    price:            String(req.body.price             || '').trim(),
-    equipmentType:    String(req.body.equipmentType     || '').trim(),
-    faultDescription: String(req.body.faultDescription  || '').trim(),
+    // Accept multiple possible field names from different forms
+    calloutPriority:  String(req.body.calloutPriority  || req.body.service        || req.body.priority       || '').trim(),
+    price:            String(req.body.price             || req.body.amountPaid     || req.body.amount         || '').trim(),
+    equipmentType:    String(req.body.equipmentType     || req.body.equipment      || req.body.equipment_type || '').trim(),
+    faultDescription: String(req.body.faultDescription  || req.body.fault          || req.body.description    || '').trim(),
   };
 
   try {
