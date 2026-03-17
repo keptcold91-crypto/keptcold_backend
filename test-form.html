@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kept Cold — Webhook Test Form</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, sans-serif;
+      background: #0d1b2a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .card {
+      background: #1e2d3d;
+      border-radius: 12px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 520px;
+      border: 1px solid #2d3f52;
+    }
+    h1 {
+      font-size: 1.25rem;
+      color: #14b8a6;
+      margin-bottom: 0.25rem;
+    }
+    .subtitle {
+      font-size: 0.8rem;
+      color: #64748b;
+      margin-bottom: 1.5rem;
+    }
+    label {
+      display: block;
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 0.3rem;
+      margin-top: 1rem;
+    }
+    input {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      background: #0d1b2a;
+      border: 1px solid #2d3f52;
+      border-radius: 6px;
+      color: #e2e8f0;
+      font-size: 0.9rem;
+    }
+    input:focus {
+      outline: none;
+      border-color: #14b8a6;
+    }
+    button {
+      margin-top: 1.5rem;
+      width: 100%;
+      padding: 0.75rem;
+      background: #14b8a6;
+      color: #0d1b2a;
+      font-weight: 700;
+      font-size: 0.95rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover { background: #0d9488; }
+    button:disabled { background: #2d3f52; color: #64748b; cursor: not-allowed; }
+    #status {
+      margin-top: 1.25rem;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      display: none;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    #status.success { background: #064e3b; color: #6ee7b7; border: 1px solid #065f46; display: block; }
+    #status.error   { background: #450a0a; color: #fca5a5; border: 1px solid #7f1d1d; display: block; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Kept Cold — Booking Test</h1>
+    <p class="subtitle">Posts to live Railway webhook &rarr; sends both emails</p>
+
+    <form id="bookingForm">
+      <label>Business Name</label>
+      <input name="businessName" value="Test Refrigeration Ltd" required />
+
+      <label>Business Address</label>
+      <input name="businessAddress" value="10 Test Street, London, EC1A 1BB" required />
+
+      <label>Job Address</label>
+      <input name="jobAddress" value="22 Job Lane, Manchester, M1 1AA" required />
+
+      <label>Contact Name</label>
+      <input name="contactName" value="John Doe" required />
+
+      <label>Email</label>
+      <input name="email" type="email" value="hasnatfiver@gmail.com" required />
+
+      <label>Contact Number</label>
+      <input name="contactNumber" value="07700 900000" required />
+
+      <label>Access Hours</label>
+      <input name="accessHours" value="Mon–Fri 8am–6pm" required />
+
+      <button type="submit" id="submitBtn">Submit Test Booking</button>
+    </form>
+
+    <div id="status"></div>
+  </div>
+
+  <script>
+    const WEBHOOK_URL = 'https://keptcoldbackend-production.up.railway.app/webhook';
+
+    document.getElementById('bookingForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn    = document.getElementById('submitBtn');
+      const status = document.getElementById('status');
+
+      btn.disabled    = true;
+      btn.textContent = 'Sending…';
+      status.className = '';
+      status.style.display = 'none';
+
+      const formData = Object.fromEntries(new FormData(e.target).entries());
+
+      try {
+        const res  = await fetch(WEBHOOK_URL, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify(formData),
+        });
+        const json = await res.json();
+
+        status.className = res.ok ? 'success' : 'error';
+        status.textContent = JSON.stringify(json, null, 2);
+      } catch (err) {
+        status.className   = 'error';
+        status.textContent = 'Network error: ' + err.message;
+      } finally {
+        btn.disabled    = false;
+        btn.textContent = 'Submit Test Booking';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -135,7 +135,6 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok', service: 'kept-cold-webhook' });
 });
 
-// ── 404 Catch-all ───────────────────────────────────────────────────────────
 app.use("/", (req, res) => {
   res.send("server.js is running");
 });
@@ -143,7 +142,6 @@ app.use((_req, res) => {
   res.status(404).json({ error: 'Not found' });
 });
 
-// ── Start ───────────────────────────────────────────────────────────────────
 
 app.listen(PORT, () => {
   console.log(`[server] Kept Cold webhook running on port ${PORT}`);
