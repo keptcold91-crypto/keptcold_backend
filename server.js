@@ -136,7 +136,7 @@ app.get('/health', (_req, res) => {
 });
 
 app.use("/", (req, res) => {
-  res.send("server.js is running");
+  res.send("server.js is running  Congratulations! This endpoint is not meant to be used, but it confirms the server is up.");
 });
 app.use((_req, res) => {
   res.status(404).json({ error: 'Not found' });
