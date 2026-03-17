@@ -50,11 +50,21 @@ async function sendEmails(data) {
   return result;
 }
 
+// ── Booking reference generator ─────────────────────────────────────────────
+
+function generateBookingRef() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let ref = 'KC-';
+  for (let i = 0; i < 6; i++) ref += chars[Math.floor(Math.random() * chars.length)];
+  return ref;
+}
+
 // ── Validation ──────────────────────────────────────────────────────────────
 
 const REQUIRED_FIELDS = [
   'businessName', 'businessAddress', 'jobAddress',
   'contactName', 'email', 'contactNumber', 'accessHours',
+  'equipmentType', 'faultDescription', 'calloutPriority', 'price',
 ];
 
 function validatePayload(body) {
@@ -79,13 +89,18 @@ app.post('/webhook', async (req, res) => {
   }
 
   const data = {
-    businessName:    String(req.body.businessName).trim(),
-    businessAddress: String(req.body.businessAddress).trim(),
-    jobAddress:      String(req.body.jobAddress).trim(),
-    contactName:     String(req.body.contactName).trim(),
-    email:           String(req.body.email).trim().toLowerCase(),
-    contactNumber:   String(req.body.contactNumber).trim(),
-    accessHours:     String(req.body.accessHours).trim(),
+    bookingReference: generateBookingRef(),
+    businessName:     String(req.body.businessName).trim(),
+    businessAddress:  String(req.body.businessAddress).trim(),
+    jobAddress:       String(req.body.jobAddress).trim(),
+    contactName:      String(req.body.contactName).trim(),
+    email:            String(req.body.email).trim().toLowerCase(),
+    contactNumber:    String(req.body.contactNumber).trim(),
+    accessHours:      String(req.body.accessHours).trim(),
+    equipmentType:    String(req.body.equipmentType).trim(),
+    faultDescription: String(req.body.faultDescription).trim(),
+    calloutPriority:  String(req.body.calloutPriority).trim(),
+    price:            String(req.body.price).trim(),
   };
 
   try {

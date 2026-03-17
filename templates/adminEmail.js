@@ -1,9 +1,5 @@
 'use strict';
 
-/**
- * Escapes HTML special characters to prevent XSS.
- * All user-submitted data must be escaped before inserting into HTML.
- */
 function escapeHtml(str) {
   return String(str)
     .replace(/&/g, '&amp;')
@@ -13,272 +9,265 @@ function escapeHtml(str) {
     .replace(/'/g, '&#039;');
 }
 
-/**
- * Generates the admin alert HTML email — dark navy Kept Cold branding.
- *
- * @param {Object} data
- * @param {string} data.businessName
- * @param {string} data.businessAddress
- * @param {string} data.jobAddress
- * @param {string} data.contactName
- * @param {string} data.email
- * @param {string} data.contactNumber
- * @param {string} data.accessHours
- * @returns {string} HTML string
- */
 function adminEmailTemplate(data) {
+  const date = new Date();
+  const formattedDate = date.toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kept Cold Booking Alert</title>
+  <title>New Service Booking — Kept Cold</title>
 </head>
-<body style="margin:0;padding:0;background-color:#eef2f7;font-family:Arial,Helvetica,sans-serif;">
+<body style="margin:0;padding:0;background-color:#ebebeb;font-family:Arial,Helvetica,sans-serif;">
 
   <table width="100%" cellpadding="0" cellspacing="0" border="0"
-         style="background-color:#eef2f7;padding:36px 0;">
+         style="background-color:#ebebeb;padding:30px 0;">
     <tr>
       <td align="center">
         <table width="600" cellpadding="0" cellspacing="0" border="0"
-               style="max-width:600px;width:100%;border-radius:10px;overflow:hidden;
-                       box-shadow:0 2px 16px rgba(0,0,0,0.10);">
+               style="max-width:600px;width:100%;background-color:#ffffff;
+                       box-shadow:0 1px 6px rgba(0,0,0,0.13);">
 
-          <!-- ── Header ──────────────────────────────────────────── -->
+          <!-- ── Header ────────────────────────────────────────────────── -->
           <tr>
-            <td style="background-color:#0d1b2a;padding:30px 36px 24px;">
+            <td style="padding:18px 30px 14px;border-bottom:1px solid #dddddd;">
               <table width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
                   <td>
-                    <table cellpadding="0" cellspacing="0" border="0">
-                      <tr>
-                        <td style="padding-right:12px;">
-                          <span style="display:inline-block;background-color:#14b8a6;
-                                        color:#0d1b2a;font-size:13px;font-weight:800;
-                                        letter-spacing:1.5px;padding:5px 14px;
-                                        border-radius:4px;text-transform:uppercase;">
-                            COLD
-                          </span>
-                        </td>
-                        <td>
-                          <span style="font-size:13px;letter-spacing:2.5px;color:#94a3b8;
-                                        text-transform:uppercase;font-weight:600;">
-                            KEPT &nbsp;&nbsp; BOOKING ALERT
-                          </span>
-                        </td>
-                      </tr>
-                    </table>
+                    <span style="font-size:15px;font-weight:700;color:#111111;letter-spacing:0.3px;">
+                      Kept Cold Ltd
+                    </span>
                   </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- ── Sub-header bar ──────────────────────────────────── -->
-          <tr>
-            <td style="background-color:#f0f9ff;padding:14px 36px;
-                        border-left:4px solid #14b8a6;">
-              <p style="margin:0;font-size:13px;color:#0d1b2a;font-weight:600;">
-                <span style="display:inline-block;width:9px;height:9px;
-                              background-color:#14b8a6;border-radius:50%;
-                              margin-right:8px;vertical-align:middle;"></span>
-                New Customer Booking Received
-              </p>
-            </td>
-          </tr>
-
-          <!-- ── Body intro ───────────────────────────────────────── -->
-          <tr>
-            <td style="background-color:#ffffff;padding:28px 36px 20px;">
-              <h2 style="margin:0 0 12px;font-size:22px;color:#0d1b2a;font-weight:700;">
-                New Repair Booking
-              </h2>
-              <p style="margin:0;font-size:14px;color:#4b5563;line-height:1.7;">
-                Hi Kept Cold team &mdash; a new service request has just been submitted
-                through the website. Please review the details below and arrange an
-                engineer visit accordingly.
-              </p>
-            </td>
-          </tr>
-
-          <!-- ── BOOKING DETAILS table ────────────────────────────── -->
-          <tr>
-            <td style="background-color:#ffffff;padding:4px 36px 24px;">
-              <table width="100%" cellpadding="0" cellspacing="0" border="0"
-                     style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;">
-
-                <!-- Table header -->
-                <tr>
-                  <td colspan="2"
-                      style="background-color:#0d1b2a;padding:13px 18px;">
-                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                      <tr>
-                        <td>
-                          <span style="font-size:11px;font-weight:700;color:#ffffff;
-                                        text-transform:uppercase;letter-spacing:1.5px;">
-                            BOOKING DETAILS
-                          </span>
-                        </td>
-                        <td align="right">
-                          <span style="background-color:#d97706;color:#ffffff;
-                                        font-size:11px;font-weight:700;padding:3px 11px;
-                                        border-radius:20px;letter-spacing:0.5px;">
-                            &#9889; New Request
-                          </span>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-
-                <!-- Business Name -->
-                <tr>
-                  <td style="padding:13px 18px;font-size:12px;color:#6b7280;
-                              font-weight:700;width:38%;text-transform:uppercase;
-                              letter-spacing:0.8px;border-bottom:1px solid #f1f5f9;
-                              background-color:#f8fafc;">
-                    BUSINESS NAME
-                  </td>
-                  <td style="padding:13px 18px;font-size:13px;color:#0d1b2a;
-                              font-weight:700;border-bottom:1px solid #f1f5f9;
-                              background-color:#f8fafc;">
-                    ${escapeHtml(data.businessName)}
-                  </td>
-                </tr>
-
-                <!-- Business Address -->
-                <tr>
-                  <td style="padding:13px 18px;font-size:12px;color:#6b7280;
-                              font-weight:700;width:38%;text-transform:uppercase;
-                              letter-spacing:0.8px;border-bottom:1px solid #f1f5f9;">
-                    BUSINESS ADDRESS
-                  </td>
-                  <td style="padding:13px 18px;font-size:13px;color:#0d1b2a;
-                              font-weight:600;border-bottom:1px solid #f1f5f9;">
-                    ${escapeHtml(data.businessAddress)}
-                  </td>
-                </tr>
-
-                <!-- Job Address -->
-                <tr>
-                  <td style="padding:13px 18px;font-size:12px;color:#6b7280;
-                              font-weight:700;width:38%;text-transform:uppercase;
-                              letter-spacing:0.8px;background-color:#f8fafc;">
-                    JOB ADDRESS
-                  </td>
-                  <td style="padding:13px 18px;font-size:13px;color:#0d1b2a;
-                              font-weight:600;background-color:#f8fafc;">
-                    ${escapeHtml(data.jobAddress)}
-                  </td>
-                </tr>
-
-              </table>
-            </td>
-          </tr>
-
-          <!-- ── SITE & CONTACT INFORMATION table ─────────────────── -->
-          <tr>
-            <td style="background-color:#ffffff;padding:0 36px 28px;">
-              <table width="100%" cellpadding="0" cellspacing="0" border="0"
-                     style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;">
-
-                <!-- Table header -->
-                <tr>
-                  <td colspan="2"
-                      style="background-color:#0d1b2a;padding:13px 18px;">
-                    <span style="font-size:11px;font-weight:700;color:#ffffff;
-                                  text-transform:uppercase;letter-spacing:1.5px;">
-                      SITE &amp; CONTACT INFORMATION
+                  <td align="right">
+                    <span style="font-size:12px;color:#999999;">
+                      ${formattedDate}
                     </span>
                   </td>
                 </tr>
-
-                <!-- Contact Name -->
                 <tr>
-                  <td style="padding:13px 18px;font-size:12px;color:#6b7280;
-                              font-weight:700;width:38%;text-transform:uppercase;
-                              letter-spacing:0.8px;border-bottom:1px solid #f1f5f9;
-                              background-color:#f8fafc;">
-                    CONTACT NAME
+                  <td colspan="2" style="padding-top:3px;">
+                    <span style="font-size:12px;color:#999999;font-style:italic;">
+                      Commercial Refrigeration Services
+                    </span>
                   </td>
-                  <td style="padding:13px 18px;font-size:13px;color:#0d1b2a;
-                              font-weight:700;border-bottom:1px solid #f1f5f9;
-                              background-color:#f8fafc;">
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ── Body ──────────────────────────────────────────────────── -->
+          <tr>
+            <td style="padding:26px 30px 0;">
+
+              <!-- Internal Notification label -->
+              <p style="margin:0 0 8px;font-size:11px;color:#999999;
+                          text-transform:uppercase;letter-spacing:1.5px;">
+                Internal Notification
+              </p>
+
+              <!-- Title -->
+              <h1 style="margin:0 0 13px;font-size:22px;font-weight:700;
+                          color:#111111;line-height:1.3;">
+                New Service Booking Received
+              </h1>
+
+              <!-- Description -->
+              <p style="margin:0 0 22px;font-size:14px;color:#555555;line-height:1.65;">
+                A new service request has been submitted through the website. Please
+                review the detail below and arrange an engineer visit accordingly.
+              </p>
+
+              <!-- Booking Reference button -->
+              <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom:22px;">
+                <tr>
+                  <td style="background-color:#2e7d32;border-radius:4px;padding:10px 20px;">
+                    <span style="font-size:13px;font-weight:700;color:#ffffff;
+                                  letter-spacing:1px;text-transform:uppercase;">
+                      Booking Reference &nbsp;&nbsp; ${escapeHtml(data.bookingReference)}
+                    </span>
+                  </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+
+          <!-- ── Call Out Priority ──────────────────────────────────────── -->
+          <tr>
+            <td style="padding:0 30px 22px;">
+              <p style="margin:0 0 7px;font-size:11px;color:#999999;
+                          text-transform:uppercase;letter-spacing:1.5px;">
+                Call Out Priority
+              </p>
+              <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                  <td style="border-left:4px solid #2e7d32;padding-left:14px;">
+                    <p style="margin:0;font-size:14px;font-weight:700;
+                                color:#cc2200;line-height:1.5;">
+                      ${escapeHtml(data.calloutPriority)}
+                      <span style="color:#555555;font-weight:400;">
+                        &mdash; ${escapeHtml(data.price)} (paid)
+                      </span>
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ── Divider strip ──────────────────────────────────────────── -->
+          <tr><td style="height:8px;background-color:#f5f5f5;"></td></tr>
+
+          <!-- ── Business Details ───────────────────────────────────────── -->
+          <tr>
+            <td style="padding:20px 30px 4px;">
+              <p style="margin:0 0 12px;font-size:11px;color:#999999;font-weight:700;
+                          text-transform:uppercase;letter-spacing:1.5px;
+                          border-bottom:1px solid #eeeeee;padding-bottom:8px;">
+                Business Details
+              </p>
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="padding:7px 0;font-size:12px;color:#999999;width:42%;vertical-align:top;">
+                    Business Name
+                  </td>
+                  <td style="padding:7px 0;font-size:13px;color:#111111;font-weight:600;vertical-align:top;">
+                    ${escapeHtml(data.businessName)}
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:7px 0;font-size:12px;color:#999999;vertical-align:top;">
+                    Business Address
+                  </td>
+                  <td style="padding:7px 0;font-size:13px;color:#111111;font-weight:600;vertical-align:top;">
+                    ${escapeHtml(data.businessAddress)}
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:7px 0;font-size:12px;color:#999999;vertical-align:top;">
+                    Job Address
+                  </td>
+                  <td style="padding:7px 0;font-size:13px;color:#111111;font-weight:600;vertical-align:top;">
+                    ${escapeHtml(data.jobAddress)}
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:7px 0 16px;font-size:12px;color:#999999;vertical-align:top;">
+                    Site Access Hours
+                  </td>
+                  <td style="padding:7px 0 16px;font-size:13px;color:#111111;font-weight:600;vertical-align:top;">
+                    ${escapeHtml(data.accessHours)}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ── Divider strip ──────────────────────────────────────────── -->
+          <tr><td style="height:8px;background-color:#f5f5f5;"></td></tr>
+
+          <!-- ── Contact Information ────────────────────────────────────── -->
+          <tr>
+            <td style="padding:20px 30px 4px;">
+              <p style="margin:0 0 12px;font-size:11px;color:#999999;font-weight:700;
+                          text-transform:uppercase;letter-spacing:1.5px;
+                          border-bottom:1px solid #eeeeee;padding-bottom:8px;">
+                Contact Information
+              </p>
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="padding:7px 0;font-size:12px;color:#999999;width:42%;vertical-align:top;">
+                    Contact Name
+                  </td>
+                  <td style="padding:7px 0;font-size:13px;color:#111111;font-weight:600;vertical-align:top;">
                     ${escapeHtml(data.contactName)}
                   </td>
                 </tr>
-
-                <!-- Email Address -->
                 <tr>
-                  <td style="padding:13px 18px;font-size:12px;color:#6b7280;
-                              font-weight:700;width:38%;text-transform:uppercase;
-                              letter-spacing:0.8px;border-bottom:1px solid #f1f5f9;">
-                    EMAIL ADDRESS
+                  <td style="padding:7px 0;font-size:12px;color:#999999;vertical-align:top;">
+                    Phone
                   </td>
-                  <td style="padding:13px 18px;font-size:13px;
-                              font-weight:600;border-bottom:1px solid #f1f5f9;">
+                  <td style="padding:7px 0;font-size:13px;color:#111111;font-weight:600;vertical-align:top;">
+                    ${escapeHtml(data.contactNumber)}
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:7px 0 16px;font-size:12px;color:#999999;vertical-align:top;">
+                    Email
+                  </td>
+                  <td style="padding:7px 0 16px;font-size:13px;vertical-align:top;">
                     <a href="mailto:${escapeHtml(data.email)}"
-                       style="color:#0ea5e9;text-decoration:none;">
+                       style="color:#1565c0;text-decoration:none;">
                       ${escapeHtml(data.email)}
                     </a>
                   </td>
                 </tr>
-
-                <!-- Contact Number -->
-                <tr>
-                  <td style="padding:13px 18px;font-size:12px;color:#6b7280;
-                              font-weight:700;width:38%;text-transform:uppercase;
-                              letter-spacing:0.8px;border-bottom:1px solid #f1f5f9;
-                              background-color:#f8fafc;">
-                    CONTACT NUMBER
-                  </td>
-                  <td style="padding:13px 18px;font-size:13px;
-                              font-weight:600;border-bottom:1px solid #f1f5f9;
-                              background-color:#f8fafc;">
-                    <a href="tel:${escapeHtml(data.contactNumber)}"
-                       style="color:#0ea5e9;text-decoration:none;">
-                      ${escapeHtml(data.contactNumber)}
-                    </a>
-                  </td>
-                </tr>
-
-                <!-- Access Hours -->
-                <tr>
-                  <td style="padding:13px 18px;font-size:12px;color:#6b7280;
-                              font-weight:700;width:38%;text-transform:uppercase;
-                              letter-spacing:0.8px;">
-                    ACCESS HOURS
-                  </td>
-                  <td style="padding:13px 18px;font-size:13px;color:#0d1b2a;
-                              font-weight:600;">
-                    ${escapeHtml(data.accessHours)}
-                  </td>
-                </tr>
-
               </table>
             </td>
           </tr>
 
-          <!-- ── Call Customer Now Button ───────────────────────────── -->
+          <!-- ── Divider strip ──────────────────────────────────────────── -->
+          <tr><td style="height:8px;background-color:#f5f5f5;"></td></tr>
+
+          <!-- ── Job Details ────────────────────────────────────────────── -->
           <tr>
-            <td style="background-color:#ffffff;padding:0 36px 36px;text-align:center;">
-              <a href="tel:${escapeHtml(data.contactNumber)}"
-                 style="display:inline-block;background-color:#0d1b2a;color:#ffffff;
-                         font-size:14px;font-weight:700;padding:15px 36px;
-                         border-radius:6px;text-decoration:none;letter-spacing:0.5px;">
-                &#128222; &nbsp;Call Customer Now
-              </a>
+            <td style="padding:20px 30px 4px;">
+              <p style="margin:0 0 12px;font-size:11px;color:#999999;font-weight:700;
+                          text-transform:uppercase;letter-spacing:1.5px;
+                          border-bottom:1px solid #eeeeee;padding-bottom:8px;">
+                Job Details
+              </p>
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="padding:7px 0;font-size:12px;color:#999999;width:42%;vertical-align:top;">
+                    Equipment Type
+                  </td>
+                  <td style="padding:7px 0;font-size:13px;color:#111111;font-weight:600;vertical-align:top;">
+                    ${escapeHtml(data.equipmentType)}
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:7px 0 16px;font-size:12px;color:#999999;vertical-align:top;">
+                    Fault Description
+                  </td>
+                  <td style="padding:7px 0 16px;font-size:13px;color:#111111;font-weight:400;vertical-align:top;">
+                    ${escapeHtml(data.faultDescription)}
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
 
-          <!-- ── Footer ─────────────────────────────────────────────── -->
+          <!-- ── Divider strip ──────────────────────────────────────────── -->
+          <tr><td style="height:8px;background-color:#f5f5f5;"></td></tr>
+
+          <!-- ── Footer note ────────────────────────────────────────────── -->
           <tr>
-            <td style="background-color:#f8fafc;padding:20px 36px;
-                        border-top:1px solid #e2e8f0;">
-              <p style="margin:0;font-size:12px;color:#9ca3af;line-height:1.7;
-                          text-align:center;">
+            <td style="padding:20px 30px;">
+              <p style="margin:0;font-size:13px;color:#555555;line-height:1.65;">
                 This is an automated notification from the Kept Cold booking system.
-                Please ensure a timely response for this service request.
+                Payment of <strong>${escapeHtml(data.price)}</strong> has been
+                collected from the customer at time of booking.
+              </p>
+            </td>
+          </tr>
+
+          <!-- ── Company footer ─────────────────────────────────────────── -->
+          <tr>
+            <td style="padding:14px 30px 18px;border-top:1px solid #dddddd;
+                        background-color:#f8f8f8;">
+              <p style="margin:0;font-size:11px;color:#777777;line-height:2;">
+                <strong>Kept Cold Ltd</strong> | 020 8146 3671 |
+                service@keptcold.co.uk | keptcold.co.uk
+              </p>
+              <p style="margin:3px 0 0;font-size:11px;color:#bbbbbb;">
+                &copy; 2026 Kept Cold Ltd. All rights reserved.
               </p>
             </td>
           </tr>
