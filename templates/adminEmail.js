@@ -19,7 +19,7 @@ function adminEmailTemplate(data) {
   const price         = data.totalPrice       ? escapeHtml(data.totalPrice)       : '&mdash;';
   const equipmentType = data.equipmentType    ? escapeHtml(data.equipmentType)    : '&mdash;';
   const faultDesc     = data.faultDescription ? escapeHtml(data.faultDescription) : '&mdash;';
-  const attachCount   = data.attachments ? data.attachments.length : 12;
+  const attachCount   = data.attachments ? data.attachments.length : 0;
   console.log("attachment count:", attachCount, typeof attachCount);
   
   

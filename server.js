@@ -123,13 +123,19 @@ app.post('/webhook', upload.any(), async (req, res) => {
   if (req.body.attachments) {
     try {
       const parsed = JSON.parse(req.body.attachments);
-      attachments = parsed.map((a, i) => ({ cid: `photo${i}`, ...a }));
+      attachments = parsed.map((a, i) => ({
+        cid:      `photo${i}`,
+        filename: a.filename,
+        mimeType: a.mimeType,
+        // Strip the "data:image/...;base64," prefix if present — Apps Script needs raw base64
+        data:     a.data ? a.data.replace(/^data:[^;]+;base64,/, '') : a.data,
+      }));
     } catch (e) {
       console.warn('[webhook] Failed to parse attachments field:', e.message);
     }
   }
 
-  console.log(`[webhook] Files received: ${attachments.length}`, attachments.map(a => `${a.filename} (${a.mimeType})`));
+  console.log(`[webhook] Files received: ${attachments.length}`, attachments.map(a => `${a.filename} (${a.mimeType}) data-len:${a.data ? a.data.length : 'NULL'}`));
 
   data.attachmentCount = attachments.length;
   data.attachments     = attachments;
