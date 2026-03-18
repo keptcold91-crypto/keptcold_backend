@@ -19,7 +19,7 @@ function adminEmailTemplate(data) {
   const price         = data.totalPrice       ? escapeHtml(data.totalPrice)       : '&mdash;';
   const equipmentType = data.equipmentType    ? escapeHtml(data.equipmentType)    : '&mdash;';
   const faultDesc     = data.faultDescription ? escapeHtml(data.faultDescription) : '&mdash;';
-  const attachCount   = data.attachmentCount  || 0;
+  const attachCount   = data.attachments ? data.attachments.length : 12;
   console.log("attachment count:", attachCount, typeof attachCount);
   
   
@@ -290,19 +290,15 @@ function adminEmailTemplate(data) {
               Photos (${attachCount})
             </p>
             <table cellpadding="0" cellspacing="0" border="0" width="100%">
-              <tr>
-                ${data.attachments.filter(a => a.mimeType.startsWith('image/')).map(a => `
-                <td style="padding:4px 8px 4px 0;vertical-align:top;">
-                  <img src="cid:${a.cid}"
-                       alt="${escapeHtml(a.filename)}"
-                       style="max-width:160px;max-height:160px;border-radius:4px;
-                              border:1px solid #eeeeee;display:block;" />
-                  <p style="margin:4px 0 0;font-size:10px;color:#aaaaaa;">
-                    ${escapeHtml(a.filename)}
-                  </p>
-                </td>`).join('')}
-              </tr>
+              ${data.attachments.filter(a => a.mimeType.startsWith('image/')).map(a => `<tr>
+                <td style="padding:5px 0;font-size:12px;color:#111111;border-bottom:1px solid #f5f5f5;">
+                  📎 ${escapeHtml(a.filename)}
+                </td>
+              </tr>`).join('')}
             </table>
+            <p style="margin:10px 0 0;font-size:11px;color:#aaaaaa;">
+              See attached files in this email.
+            </p>
           </td>
         </tr>
         <tr>
