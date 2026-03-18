@@ -49,9 +49,9 @@ function adminEmailTemplate(data) {
             <table width="100%" cellpadding="0" cellspacing="0" border="0">
               <tr>
                 <td>
-                  <span style="font-size:14px;font-weight:700;color:#111111;">
-                    Kept Cold Ltd
-                  </span>
+                  <img src="https://www.keptcold.co.uk/wp-content/uploads/2025/01/newlogo-retina.png"
+                       alt="Kept Cold Ltd"
+                       style="height:40px;width:auto;display:block;" />
                 </td>
                 <td align="right">
                   <span style="font-size:11px;color:#aaaaaa;">
