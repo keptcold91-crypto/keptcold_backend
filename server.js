@@ -56,6 +56,7 @@ async function sendEmails(data, attachments = []) {
   }
 
   const result = await res.json();
+  console.log('[appsScript] Response:', JSON.stringify(result));
   if (!result.success) throw new Error(result.error || 'Apps Script failed');
   return result;
 }
