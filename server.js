@@ -122,9 +122,7 @@ app.post('/webhook', upload.any(), async (req, res) => {
     data:     file.buffer.toString('base64'),
   }));
 
-  if (attachments.length > 0) {
-    console.log(`[webhook] Attachments:`, attachments.map(a => `${a.filename} (${a.mimeType})`));
-  }
+  console.log(`[webhook] Files received: ${attachments.length}`, attachments.map(a => `${a.filename} (${a.mimeType})`));
 
   data.attachmentCount = attachments.length;
   data.attachments     = attachments;
