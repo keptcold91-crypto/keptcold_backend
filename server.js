@@ -115,12 +115,16 @@ app.post('/webhook', upload.any(), async (req, res) => {
     faultDescription: String(req.body.faultDescription  || req.body.fault          || req.body.description    || '').trim(),
   };
 
-  const attachments = (req.files || []).map((file, i) => ({
-    cid:      `photo${i}`,
-    filename: file.originalname,
-    mimeType: file.mimetype,
-    data:     file.buffer.toString('base64'),
-  }));
+  // Parse base64 attachments sent as JSON string in FormData field
+  let attachments = [];
+  if (req.body.attachments) {
+    try {
+      const parsed = JSON.parse(req.body.attachments);
+      attachments = parsed.map((a, i) => ({ cid: `photo${i}`, ...a }));
+    } catch (e) {
+      console.warn('[webhook] Failed to parse attachments field:', e.message);
+    }
+  }
 
   console.log(`[webhook] Files received: ${attachments.length}`, attachments.map(a => `${a.filename} (${a.mimeType})`));
 
