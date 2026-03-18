@@ -16,11 +16,16 @@ function adminEmailTemplate(data) {
 
   const ref           = escapeHtml(data.bookingReference || '');
   const priority      = data.calloutPriority  ? escapeHtml(data.calloutPriority)  : '&mdash;';
-  const price         = data.price            ? escapeHtml(data.price)            : '&mdash;';
+  const price         = data.totalPrice       ? escapeHtml(data.totalPrice)       : '&mdash;';
   const equipmentType = data.equipmentType    ? escapeHtml(data.equipmentType)    : '&mdash;';
   const faultDesc     = data.faultDescription ? escapeHtml(data.faultDescription) : '&mdash;';
+  const attachCount   = data.attachmentCount  || 0;
+  console.log("attachment count:", attachCount, typeof attachCount);
+  
+  
 
   return `<!DOCTYPE html>
+  
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -276,14 +281,47 @@ function adminEmailTemplate(data) {
           </td>
         </tr>
 
+        <!-- ── PHOTOS ────────────────────────────────────────────────────── -->
+        ${attachCount > 0 ? `<tr>
+          <td style="padding:16px 28px 0;">
+            <p style="margin:0 0 10px;font-size:10px;color:#aaaaaa;font-weight:700;
+                       text-transform:uppercase;letter-spacing:1.8px;
+                       border-bottom:1px solid #eeeeee;padding-bottom:7px;">
+              Photos (${attachCount})
+            </p>
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+              <tr>
+                ${data.attachments.filter(a => a.mimeType.startsWith('image/')).map(a => `
+                <td style="padding:4px 8px 4px 0;vertical-align:top;">
+                  <img src="cid:${a.cid}"
+                       alt="${escapeHtml(a.filename)}"
+                       style="max-width:160px;max-height:160px;border-radius:4px;
+                              border:1px solid #eeeeee;display:block;" />
+                  <p style="margin:4px 0 0;font-size:10px;color:#aaaaaa;">
+                    ${escapeHtml(a.filename)}
+                  </p>
+                </td>`).join('')}
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:0 28px 0;">
+            <div style="border-top:1px solid #eeeeee;margin-top:16px;"></div>
+          </td>
+        </tr>` : ''}
+
         <!-- ── FOOTER NOTE ───────────────────────────────────────────────── -->
         <tr>
           <td style="padding:18px 28px;">
             <p style="margin:0;font-size:12px;color:#555555;line-height:1.65;">
               This is an automated notification from the Kept Cold booking system.
-              ${price ? `Payment of <strong>${price}</strong> has been collected
+              ${price && price !== '&mdash;' ? `Payment of <strong>${price}</strong> has been collected
               from the customer at time of booking.` : ''}
             </p>
+            ${attachCount > 0 ? `<p style="margin:10px 0 0;font-size:12px;color:#555555;line-height:1.65;">
+              <strong>${attachCount} attachment${attachCount === 1 ? '' : 's'}</strong> submitted with this booking — see attached file${attachCount === 1 ? '' : 's'}.
+            </p>` : ''}
           </td>
         </tr>
 

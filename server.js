@@ -4,8 +4,14 @@ require('dotenv').config();
 
 const express = require('express');
 const cors    = require('cors');
+const multer  = require('multer');
 const { adminEmailTemplate }    = require('./templates/adminEmail');
 const { customerEmailTemplate } = require('./templates/customerEmail');
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB per file
+});
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -22,7 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // ── Email via Google Apps Script ────────────────────────────────────────────
 
-async function sendEmails(data) {
+async function sendEmails(data, attachments = []) {
   const payload = JSON.stringify({
     adminEmail:      process.env.ADMIN_EMAIL,
     adminSubject:    `New Repair Booking — ${data.businessName}`,
@@ -30,6 +36,7 @@ async function sendEmails(data) {
     customerEmail:   data.email,
     customerSubject: 'Your Repair Booking Has Been Received – Kept Cold',
     customerHtml:    customerEmailTemplate(data),
+    attachments,
   });
 
   // Google Apps Script redirects POST — follow redirect manually keeping POST
@@ -78,7 +85,7 @@ function validatePayload(body) {
 
 // ── Webhook Route ───────────────────────────────────────────────────────────
 
-app.post('/webhook', async (req, res) => {
+app.post('/webhook', upload.any(), async (req, res) => {
   const validation = validatePayload(req.body);
   if (!validation.valid) {
     const message = validation.invalidEmail
@@ -108,8 +115,22 @@ app.post('/webhook', async (req, res) => {
     faultDescription: String(req.body.faultDescription  || req.body.fault          || req.body.description    || '').trim(),
   };
 
+  const attachments = (req.files || []).map((file, i) => ({
+    cid:      `photo${i}`,
+    filename: file.originalname,
+    mimeType: file.mimetype,
+    data:     file.buffer.toString('base64'),
+  }));
+
+  if (attachments.length > 0) {
+    console.log(`[webhook] Attachments:`, attachments.map(a => `${a.filename} (${a.mimeType})`));
+  }
+
+  data.attachmentCount = attachments.length;
+  data.attachments     = attachments;
+
   try {
-    await sendEmails(data);
+    await sendEmails(data, attachments);
     console.log(`[webhook] Emails sent for booking: ${data.businessName}`);
     return res.status(200).json({ success: true, message: 'Booking received. Confirmation emails sent.' });
   } catch (err) {
