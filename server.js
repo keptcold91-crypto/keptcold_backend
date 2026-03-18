@@ -2,9 +2,10 @@
 
 require('dotenv').config();
 
-const express = require('express');
-const cors    = require('cors');
-const multer  = require('multer');
+const express    = require('express');
+const cors       = require('cors');
+const multer     = require('multer');
+const nodemailer = require('nodemailer');
 const { adminEmailTemplate }    = require('./templates/adminEmail');
 const { customerEmailTemplate } = require('./templates/customerEmail');
 
