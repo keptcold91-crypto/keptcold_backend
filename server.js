@@ -10,7 +10,10 @@ const { customerEmailTemplate } = require('./templates/customerEmail');
 
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB per file
+  limits: {
+    fileSize:  10 * 1024 * 1024, // 10 MB per file
+    fieldSize: 25 * 1024 * 1024, // 25 MB per field (base64 encoded images)
+  },
 });
 
 const app  = express();
