@@ -291,14 +291,13 @@ function adminEmailTemplate(data) {
             </p>
             <table cellpadding="0" cellspacing="0" border="0" width="100%">
               ${data.attachments.filter(a => a.mimeType.startsWith('image/')).map(a => `<tr>
-                <td style="padding:5px 0;font-size:12px;color:#111111;border-bottom:1px solid #f5f5f5;">
-                  ${escapeHtml(a.filename)}
+                <td style="padding:8px 0;">
+                  <img src="cid:${a.cid}" alt="${escapeHtml(a.filename)}"
+                       style="max-width:100%;height:auto;border-radius:4px;display:block;" />
+                  <p style="margin:4px 0 0;font-size:11px;color:#aaaaaa;">${escapeHtml(a.filename)}</p>
                 </td>
               </tr>`).join('')}
             </table>
-            <p style="margin:10px 0 0;font-size:11px;color:#aaaaaa;">
-              See attached files in this email.
-            </p>
           </td>
         </tr>
         <tr>
